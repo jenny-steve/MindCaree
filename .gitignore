@@ -1,0 +1,5 @@
+contacts.csv
+mindcare.db
+/__pycache__
+/engine/__pycache__
+/engine/cookies.json
