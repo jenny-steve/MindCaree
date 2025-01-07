@@ -4,12 +4,14 @@ import eel
 import time
 
 def speak(text):
+    text = str(text)
     engine = pyttsx3.init('sapi5')
     voices = engine.getProperty('voices')
     engine.setProperty('voice', voices[0].id)
     engine.setProperty('rate', 174)
     eel.DisplayMessage(text)
     engine.say(text)
+    eel.receiverText(text)
     engine.runAndWait()
 
 def takecommand():
@@ -32,29 +34,37 @@ def takecommand():
         time.sleep(2)
 
     except Exception as e:
+        print(f"Error recognizing speech: {e}")
         return ""
-    
+
     return query.lower()
 
 @eel.expose
 def allCommands(message=1):
     if message == 1:
         query = takecommand()
-        print(query)
+        print(f"Received query: {query}")
+        eel.senderText(query)
     else:
         query = message
+        eel.senderText(query)
+
+    if not query:
+        print("No input received. Please try again.")
+        eel.DisplayMessage("No input received. Please try again.")
+        return
 
     try:
         if "open" in query:
             from engine.feautures import openCommand
             openCommand(query)
-        elif "on youtube":
+        elif "on youtube" in query:
             from engine.feautures import PlayYoutube
             PlayYoutube(query)
         else:
-            print("Not run")
-
-    except:
-        print("error")
+            from engine.feautures import chatBot
+            chatBot(query)
+    except Exception as e:
+        print(f"Error in processing command: {e}")
 
     eel.ShowHood()

@@ -8,6 +8,8 @@ import webbrowser
 import pyaudio
 import pvporcupine
 import pywhatkit as kit
+from hugchat import hugchat
+from hugchat.login import Login
 from playsound import playsound
 from engine.command import speak
 from engine.config import ASSISTANT_NAME
@@ -100,3 +102,24 @@ def hotword():
             audio_stream.close()
         if paud is not None:
             paud.terminate()
+
+# Path to your cookies.json file
+cookie_path = os.path.abspath("engine/cookies.json")
+
+# Initialize ChatBot
+chatbot = hugchat.ChatBot(cookie_path=cookie_path)
+
+# Start a new conversation
+conversation_id = chatbot.new_conversation()
+chatbot.change_conversation(conversation_id)
+
+# chat bot 
+def chatBot(query):
+    user_input = query.lower()
+    # Start a new conversation
+    print("Sending user input to chatbot...")
+    response = chatbot.chat(user_input)  # Call chatbot.chat() to interact with the model
+    # print("ChatBot Response:", response)
+    speak(response)
+    return response
+
